@@ -2,8 +2,87 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { fileURLToPath, URL } from 'node:url'
 
+// ---- 本地开发 mock 数据 ----
+const PROCESS_GROUPS = [
+  { letter: 'A', items: [{ name: '按揭贷款管理', code: 'A001' }, { name: '安全生产管理', code: 'A002' }] },
+  { letter: 'B', items: [{ name: '保全服务流程管理', code: 'B001' }, { name: '保险核保管理', code: 'B002' }, { name: '保险理赔处理', code: 'B003' }, { name: '保险销售合规管理', code: 'B004' }] },
+  { letter: 'C', items: [{ name: '财务报告管理', code: 'C001' }, { name: '财务预算控制', code: 'C002' }, { name: '操作风险管理', code: 'C003' }, { name: '出纳资金管理', code: 'C004' }] },
+  { letter: 'D', items: [{ name: '贷款发放管理', code: 'D001' }, { name: '代理业务合规管理', code: 'D002' }] },
+  { letter: 'F', items: [{ name: '法律合规管理', code: 'F001' }, { name: '反洗钱监控管理', code: 'F002' }, { name: '风险评估管理', code: 'F003' }] },
+  { letter: 'G', items: [{ name: '供应商资质管理', code: 'G001' }, { name: '公文档案管理', code: 'G002' }] },
+  { letter: 'H', items: [{ name: '合同审批管理', code: 'H001' }, { name: '行政后勤管理', code: 'H002' }] },
+  { letter: 'J', items: [{ name: '绩效考核管理', code: 'J001' }, { name: '精算评估管理', code: 'J002' }, { name: '决策审批流程', code: 'J003' }] },
+  { letter: 'K', items: [{ name: '客户服务质量管理', code: 'K001' }, { name: '客户信息安全管理', code: 'K002' }] },
+  { letter: 'L', items: [{ name: '理赔支付审核', code: 'L001' }, { name: '流动性风险管理', code: 'L002' }] },
+  { letter: 'M', items: [{ name: '满期保险金管理', code: 'M001' }, { name: '内部审计管理', code: 'M002' }] },
+  { letter: 'N', items: [{ name: '内控自评管理', code: 'N001' }, { name: '内部培训体系', code: 'N002' }] },
+  { letter: 'Q', items: [{ name: '签单业务管理', code: 'Q001' }, { name: '前台服务控制', code: 'Q002' }] },
+  { letter: 'R', items: [{ name: '人力资源规划管理', code: 'R001' }, { name: '日常运营监控', code: 'R002' }] },
+  { letter: 'S', items: [{ name: '审计监督管理', code: 'S001' }, { name: '数据安全防护', code: 'S002' }, { name: '索赔业务处理', code: 'S003' }] },
+]
+
+const RISK_ITEMS = [
+  {
+    id: 1,
+    riskName: '精算评估方法不符合会计准则',
+    controlMeasure: '精算部和财务部跟踪相关监管机构发布的会计准则等',
+    controlLevel: '总公司',
+    details: {
+      riskName: '精算评估方法不符合会计准则',
+      controlMeasure: '精算部和财务部跟踪相关监管机构发布的会计准则等',
+      controlLevel: '总公司',
+      headDeptHQ: '精算部',
+      headDeptProvince: '无',
+      headDeptCity: '无',
+      headDeptCounty: '无',
+      controlSystem: '日常步骤操作',
+      controlDesc: '不适用',
+    },
+  },
+  { id: 2, riskName: '合同条款存在法律风险', controlMeasure: '法务部门定期审查合同模板及签署流程', controlLevel: '省公司', details: null },
+  { id: 3, riskName: '客户信息泄露风险', controlMeasure: '实施数据加密与权限分级管理制度', controlLevel: '总公司', details: null },
+  { id: 4, riskName: '理赔审核流程不规范', controlMeasure: '建立理赔双人复核与自动预警机制', controlLevel: '地市公司', details: null },
+]
+
+function mockMiddleware(req, res) {
+  const json = (data) => {
+    res.setHeader('Content-Type', 'application/json')
+    res.end(JSON.stringify({ code: 0, msg: 'success', data }))
+    return true
+  }
+
+  if (req.url === '/api/matrix/process/list') {
+    return json({ groups: PROCESS_GROUPS })
+  }
+
+  const riskMatch = req.url.match(/^\/api\/matrix\/process\/(.+)\/risks$/)
+  if (riskMatch) {
+    const code = riskMatch[1]
+    const allItems = PROCESS_GROUPS.flatMap(g => g.items)
+    const process = allItems.find(i => i.code === code)
+    return json({
+      processName: process ? process.name : code,
+      riskItems: RISK_ITEMS,
+    })
+  }
+
+  return false // 未命中，交给后续处理
+}
+// ---- end mock ----
+
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    {
+      name: 'dev-mock',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url?.startsWith('/api') && !mockMiddleware(req, res)) next()
+          else if (!req.url?.startsWith('/api')) next()
+        })
+      },
+    },
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

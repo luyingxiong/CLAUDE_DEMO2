@@ -1,10 +1,13 @@
 <script setup>
+import { onMounted } from 'vue'
 import StatusBar from '@/components/StatusBar.vue'
 import SearchSection from './SearchSection.vue'
 import ProcessList from './ProcessList.vue'
 import { useProcessList } from '@/composables/useProcessList'
 
-const { searchQuery, filteredGroups, indexList } = useProcessList()
+const { searchQuery, filteredGroups, indexList, loading, error, load } = useProcessList()
+
+onMounted(load)
 </script>
 
 <template>
@@ -17,7 +20,9 @@ const { searchQuery, filteredGroups, indexList } = useProcessList()
     </van-nav-bar>
     <search-section v-model="searchQuery" />
     <div class="scroll-area">
-      <process-list :groups="filteredGroups" :index-list="indexList" />
+      <van-loading v-if="loading" type="spinner" class="loader" />
+      <van-empty v-else-if="error" :description="error" image="error" />
+      <process-list v-else :groups="filteredGroups" :index-list="indexList" />
     </div>
   </div>
 </template>
@@ -33,5 +38,10 @@ const { searchQuery, filteredGroups, indexList } = useProcessList()
   flex: 1;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+.loader {
+  display: flex;
+  justify-content: center;
+  padding-top: 60px;
 }
 </style>

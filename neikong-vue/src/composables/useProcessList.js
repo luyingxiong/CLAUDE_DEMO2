@@ -18,6 +18,14 @@ const ALL_GROUPS = [
   { letter: 'S', items: [{ name: '审计监督管理', code: 'S001' }, { name: '数据安全防护', code: 'S002' }, { name: '索赔业务处理', code: 'S003' }] },
 ]
 
+export function findProcessByCode(code) {
+  for (const group of ALL_GROUPS) {
+    const item = group.items.find(i => i.code === code)
+    if (item) return item
+  }
+  return null
+}
+
 export function useProcessList() {
   const searchQuery = ref('')
 

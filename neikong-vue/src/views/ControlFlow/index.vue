@@ -1,6 +1,19 @@
 <script setup>
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import StatusBar from '@/components/StatusBar.vue'
 import RiskRow from './RiskRow.vue'
+import { findProcessByCode } from '@/composables/useProcessList'
+
+const route = useRoute()
+const router = useRouter()
+
+const process = computed(() => findProcessByCode(route.params.code))
+const pageTitle = computed(() => process.value ? `${process.value.name}基本控制流程` : '控制流程详情')
+
+function goBack() {
+  router.back()
+}
 
 const riskItems = [
   {
@@ -35,9 +48,9 @@ const riskItems = [
 <template>
   <div class="view">
     <status-bar />
-    <van-nav-bar title="" :border="false" />
+    <van-nav-bar title="" :border="false" left-arrow @click-left="goBack" />
     <div class="scroll-area">
-      <div class="page-title">保全服务基本控制流程</div>
+      <div class="page-title">{{ pageTitle }}</div>
       <div class="risk-card">
         <!-- 表头 -->
         <div class="table-header">

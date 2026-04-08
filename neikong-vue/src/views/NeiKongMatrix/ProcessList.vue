@@ -1,9 +1,17 @@
 <script setup>
-// 职责：字母索引 + 分组列表，纯展示
+// 职责：字母索引 + 分组列表，纯展示；点击流程跳转详情
+import { useRouter } from 'vue-router'
+
 defineProps({
   groups: { type: Array, required: true },
   indexList: { type: Array, required: true },
 })
+
+const router = useRouter()
+
+function onItemClick(item) {
+  router.push({ path: `/matrix/flow/${item.code}`, query: { name: item.name } })
+}
 </script>
 
 <template>
@@ -17,6 +25,7 @@ defineProps({
           :title="item.name"
           :label="item.code"
           is-link
+          @click="onItemClick(item)"
         />
       </template>
     </van-index-bar>

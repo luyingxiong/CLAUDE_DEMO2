@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"> 
+  <title>每日一题</title> 
+  <script src="../javascript/reload.js"></script> 
+  <script src="https://cdn.tailwindcss.com"></script> 
+  <link href="./2032371334780026880/all.min.css" rel="stylesheet"> 
+  <script>tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#2196F3',
+        secondary: '#F44336',
+        neutral: '#6B7280',
+        light: '#F3F4F6',
+        dark: '#1F2937'
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif']
+      }
+    }
+  }
+};</script> 
+  <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .option-hover {
+                @apply transition-all duration-200 hover:bg-light;
+            }
+            .btn-disabled {
+                @apply opacity-50 cursor-not-allowed;
+            }
+        }
+        /* 状态类组合样式 */
+.option.selected {
+            @apply bg-primary/10 border-primary;
+        }
+        .btn-next.btn-disabled {
+            @apply opacity-50 cursor-not-allowed;
+        }
+    </style>
+  <style>
+    ::-webkit-scrollbar {
+        width: 0px;
+    }
+</style> 
+ </head> 
+ <body class="bg-gray-50 min-h-screen font-sans"> 
+  <!-- [MODULE] x1y_手机顶栏 --> 
+  <div class="bg-white text-gray-800 px-4 py-2 flex justify-between items-center border-b border-gray-200"> 
+   <div class="text-sm font-medium"> 
+    <i class="far fa-clock mr-1"> </i> 09:41 
+   </div> 
+   <div class="text-sm flex items-center"> 
+    <i class="fas fa-signal mr-1"> </i> 
+    <i class="fas fa-wifi mr-1"> </i> 
+    <i class="fas fa-battery-three-quarters"> </i> 
+   </div> 
+  </div> 
+  <!-- [/MODULE] x1y_手机顶栏 -- 包含时间显示、信号、WiFi和电量图标 --> 
+  <!-- [MODULE] a7b_主内容区域 --> 
+  <div class="container mx-auto px-4 py-6 max-w-md"> 
+   <!-- [MODULE] c3d_每日一题页面 --> 
+   <div class="bg-white rounded-xl shadow-md overflow-hidden"> 
+    <!-- [MODULE] d9f_每日一题页面:页面头部 --> 
+    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center"> 
+     <div class="text-neutral text-sm">
+       2024年10月31日 周四 
+     </div> 
+     <div class="text-primary font-medium">
+       第25天 
+     </div> 
+    </div> 
+    <!-- [/MODULE] d9f_每日一题页面:页面头部 -- 包含日期显示和第25天标识 --> 
+    <!-- [MODULE] e2g_每日一题页面:题目内容 --> 
+    <div class="p-6"> 
+     <h2 class="text-lg font-medium text-dark mb-6"> 在投资前投经过程中，对于投资人年龄超过60周岁的领单，应进行_复核，并重点关注其健康状况。 </h2> 
+     <div class="space-y-3 mb-8"> 
+      <div class="option option-hover border border-gray-200 rounded-lg p-4 cursor-pointer" data-option="A"> 
+       <div class="flex items-center"> 
+        <div class="w-5 h-5 rounded-full border border-gray-300 mr-3 flex-shrink-0"> 
+        </div> 
+        <span> 额外核 </span> 
+       </div> 
+      </div> 
+      <div class="option option-hover border border-gray-200 rounded-lg p-4 cursor-pointer" data-option="B"> 
+       <div class="flex items-center"> 
+        <div class="w-5 h-5 rounded-full border border-gray-300 mr-3 flex-shrink-0"> 
+        </div> 
+        <span> 申请核 </span> 
+       </div> 
+      </div> 
+      <div class="option option-hover border border-gray-200 rounded-lg p-4 cursor-pointer" data-option="C"> 
+       <div class="flex items-center"> 
+        <div class="w-5 h-5 rounded-full border border-gray-300 mr-3 flex-shrink-0"> 
+        </div> 
+        <span> 补齐审核 </span> 
+       </div> 
+      </div> 
+      <div class="option option-hover border border-gray-200 rounded-lg p-4 cursor-pointer" data-option="D"> 
+       <div class="flex items-center"> 
+        <div class="w-5 h-5 rounded-full border border-gray-300 mr-3 flex-shrink-0"> 
+        </div> 
+        <span> 上报审批 </span> 
+       </div> 
+      </div> 
+     </div> 
+     <!-- [MODULE] f5h_每日一题页面:提示信息 --> 
+     <div class="hidden mb-6 p-3 rounded-lg text-sm" id="feedback"> 
+     </div> 
+     <!-- [/MODULE] f5h_每日一题页面:提示信息 -- 用于显示答题正确或错误的反馈信息 --> 
+     <!-- [MODULE] g7j_每日一题页面:操作按钮 --> 
+     <div class="flex space-x-3"> 
+      <button class="flex-1 bg-primary text-white py-2.5 rounded-lg font-medium" id="submit-btn"> 提交答案 </button> 
+      <button class="flex-1 bg-neutral text-white py-2.5 rounded-lg font-medium" id="view-btn"> 查看答案 </button> 
+     </div> 
+     <div class="mt-3"> 
+     </div> 
+     <!-- [/MODULE] g7j_每日一题页面:操作按钮 -- 包含提交答案、查看答案和下一题按钮，下一题默认不可点击 --> 
+    </div> 
+    <!-- [/MODULE] e2g_每日一题页面:题目内容 -- 包含题干、选项列表、提示信息和操作按钮 --> 
+   </div> 
+   <!-- [/MODULE] c3d_每日一题页面 -- 移动端每日一题答题界面，包含题目、选项和操作按钮 --> 
+  </div> 
+  <!-- [/MODULE] a7b_主内容区域 -- 每日一题移动端应用的主内容区域 --> 
+  <!-- [JSMOD] h9k_答题逻辑处理 --> 
+  <script id="answer-handler">document.addEventListener('DOMContentLoaded', function () {
+  // 获取DOM元素
+  var options = document.querySelectorAll('.option');
+  var submitBtn = document.getElementById('submit-btn');
+  var viewBtn = document.getElementById('view-btn');
+  var feedback = document.getElementById('feedback');
+  // 正确答案
+  var correctAnswer = "A";
+  var selectedOption = null;
+  var isAnswered = false;
+  // 选项点击事件
+  options.forEach(function (option) {
+    option.addEventListener('click', function () {
+      if (isAnswered) return;
+      // 移除其他选项的选中状态
+      options.forEach(function (opt) {
+        return opt.classList.remove('selected');
+      });
+      // 设置当前选项为选中状态
+      this.classList.add('selected');
+      selectedOption = this.dataset.option;
+    });
+  });
+  // 提交答案按钮点击事件
+  submitBtn.addEventListener('click', function () {
+    if (!selectedOption) {
+      feedback.textContent = "请选择一个答案";
+      feedback.className = "mb-6 p-3 rounded-lg text-sm bg-yellow-100 text-yellow-800";
+      return;
+    }
+    isAnswered = true;
+    if (selectedOption === correctAnswer) {
+      // 答案正确
+      feedback.textContent = "回答正确！正确答案：额外核验";
+      feedback.className = "mb-6 p-3 rounded-lg text-sm bg-green-100 text-green-800";
+      // 显示正确选项的标记
+      highlightCorrectAnswer();
+    } else {
+      // 答案错误
+      feedback.textContent = "回答错误！正确答案：额外核验";
+      feedback.className = "mb-6 p-3 rounded-lg text-sm bg-red-100 text-red-800";
+      // 显示正确选项的标记
+      highlightCorrectAnswer();
+    }
+    // 启用下一题按钮
+    nextBtn.classList.remove('btn-disabled', 'bg-gray-300');
+    nextBtn.classList.add('bg-primary');
+  });
+  // 查看答案按钮点击事件
+  viewBtn.addEventListener('click', function () {
+    isAnswered = true;
+    feedback.textContent = "正确答案：额外核验";
+    feedback.className = "mb-6 p-3 rounded-lg text-sm bg-blue-100 text-blue-800";
+    // 显示正确选项的标记
+    highlightCorrectAnswer();
+    // 启用下一题按钮
+    nextBtn.classList.remove('btn-disabled', 'bg-gray-300');
+    nextBtn.classList.add('bg-primary');
+  });
+  // 下一题按钮点击事件
+
+  // 添加按钮点击事件
+  // 高亮显示正确答案
+  function highlightCorrectAnswer() {
+    options.forEach(function (option) {
+      if (option.dataset.option === correctAnswer) {
+        option.classList.add('selected');
+        var radio = option.querySelector('div:first-child');
+        radio.innerHTML = '<i class="fas fa-check text-primary text-xs"></i>';
+      }
+    });
+  }
+  // 重置答题状态
+  function resetQuiz() {
+    // 清空选中状态
+    options.forEach(function (option) {
+      option.classList.remove('selected');
+      var radio = option.querySelector('div:first-child');
+      radio.innerHTML = '';
+    });
+    // 隐藏反馈信息
+    feedback.classList.add('hidden');
+    // 重置状态变量
+    selectedOption = null;
+    isAnswered = false;
+    // 禁用下一题按钮
+    nextBtn.classList.add('btn-disabled', 'bg-gray-300');
+    nextBtn.classList.remove('bg-primary');
+  }
+});</script> 
+  <!-- [/JSMOD] h9k_答题逻辑处理 -- 处理选项选择、答案提交、查看答案和下一题功能，包含答案判断和状态管理 -->  
+ </body>
+</html>

@@ -1,0 +1,44 @@
+/* ── 全局重置 & 移动端基础 ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: -apple-system, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  background: #f5f7fa;
+  color: #1d2129;
+}
+
+/* ── 全局 CSS 变量 ── */
+:root {
+  --primary: #165dff;
+  --success: #52c41a;
+  --error: #f44336;
+  --warning: #faad14;
+  --text-primary: #1d2129;
+  --text-secondary: #4e5969;
+  --text-muted: #86909c;
+  --border: #e5e6eb;
+  --bg-page: #f5f7fa;
+  --tabbar-height: 50px;
+}
+
+/* ── Vant 主题色 ── */
+:root {
+  --van-primary-color: var(--primary);
+  --van-nav-bar-background: #ffffff;
+  --van-tabbar-item-active-color: var(--primary);
+}

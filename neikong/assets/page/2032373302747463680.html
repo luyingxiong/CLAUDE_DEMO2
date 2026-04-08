@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"> 
+  <title>
+   AI问答助手
+  </title> 
+  <script src="../javascript/reload.js">
+  </script> 
+  <script src="./2032373302747463680/resource_2886810000.js">
+  </script> 
+  <link href="./2032373302747463680/all.min.css" rel="stylesheet"> 
+  <script>tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#165DFF',
+        secondary: '#F5F7FA',
+        textDark: '#1D2129',
+        textLight: '#4E5969',
+        borderColor: '#E5E6EB'
+      },
+      spacing: {
+        '5.5': '1.375rem',
+        '18': '4.5rem'
+      }
+    }
+  }
+};</script> 
+  <style type="text/tailwindcss">@layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .chat-bubble-user {
+                @apply bg-primary text-white rounded-t-lg rounded-bl-lg rounded-tr-lg;
+            }
+            .chat-bubble-ai {
+                @apply bg-secondary text-textDark rounded-t-lg rounded-br-lg rounded-tl-lg;
+            }
+            .input-focus {
+                @apply focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none;
+            }
+        }</style>
+  <style>
+    ::-webkit-scrollbar {
+        width: 0px;
+    }
+</style> 
+ </head> 
+ <body class="bg-white min-h-screen flex flex-col"> 
+  <!-- [MODULE] abc_主内容区域 --> 
+  <div class="flex flex-col h-screen overflow-hidden"> 
+   <!-- [MODULE] xyz_手机状态栏 --> 
+   <div class="bg-white border-b border-borderColor py-1 px-5 flex justify-between items-center"> 
+    <span class="text-textDark text-xs">9:41</span> 
+    <div class="flex items-center"> 
+     <i class="fas fa-battery-full text-textDark text-xs mr-1"></i> 
+     <span class="text-textDark text-xs">100%</span> 
+    </div> 
+   </div> 
+   <!-- [/MODULE] xyz_手机状态栏 -- 显示时间和电量信息 --> 
+   <!-- [MODULE] d23_顶部导航栏 --> 
+   <header class="bg-white border-b border-borderColor py-3 px-5 shadow-sm"> 
+    <h1 class="text-[clamp(1.25rem,5vw,1.5rem)] font-bold text-textDark text-center"> AI问答助手 </h1> 
+   </header> 
+   <!-- [/MODULE] d23_顶部导航栏 -- 包含页面标题"AI问答助手" --> 
+   <!-- [MODULE] e7g_主要内容区域 --> 
+   <main class="flex-1 flex flex-col md:flex-row overflow-hidden"> 
+    <!-- [MODULE] g9j_右侧对话窗口 --> 
+    <div class="w-full md:w-2/3 bg-secondary/50 flex flex-col"> 
+     <div class="flex-1 overflow-y-auto p-4 space-y-6" id="chat-container"> 
+      <div class="flex items-start gap-3"> 
+       <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center flex-shrink-0"> 
+        <i class="fas fa-robot"> </i> 
+       </div> 
+       <div class="max-w-[85%]"> 
+        <div class="chat-bubble-ai p-3"> 
+         <p> 您好！我是内控手册AI助手，可以为您解答关于内部控制执行手册的相关问题，例如，您可以询问：核保环节有什么需要注意的？ </p> 
+        </div> 
+        <div class="text-xs text-textLight mt-1">
+          刚刚 
+        </div> 
+       </div> 
+      </div> 
+     </div> 
+     <!-- [MODULE] x2d_问题引导模块 --> 
+     <div class="fixed bottom-14 left-0 right-0 p-4 bg-white z-10"> 
+      <div class="flex flex-wrap gap-2"> 
+       <span class="px-3 py-1 bg-secondary rounded-full text-sm cursor-pointer hover:bg-primary/10" data-question="销售环节有哪些风险点？"> 销售环节有哪些风险点？ </span> 
+       <span class="px-3 py-1 bg-secondary rounded-full text-sm cursor-pointer hover:bg-primary/10" data-question="理赔服务的控制措施有哪些？"> 理赔服务的控制措施有哪些？ </span> 
+       <span class="px-3 py-1 bg-secondary rounded-full text-sm cursor-pointer hover:bg-primary/10" data-question="公共控制措施包括哪些？"> 公共控制措施包括哪些？ </span> 
+       <span class="px-3 py-1 bg-secondary rounded-full text-sm cursor-pointer hover:bg-primary/10" data-question="个险条线的控制措施有哪些？"> 个险条线的控制措施有哪些？ </span> 
+      </div> 
+     </div> 
+     <!-- [/MODULE] x2d_问题引导模块 -- 展示预设的相关问题标签，点击可快速填充到输入框 --> 
+     <div class="fixed bottom-0 left-0 right-0 p-4 border-t border-borderColor bg-white z-10"> 
+      <div class="flex gap-3 max-w-full"> 
+       <input class="flex-1 px-4 py-2 border border-borderColor rounded-lg input-focus" id="question-input" placeholder="请输入您关于内控的问题…" style="width:310px;height:41px" type="text"> 
+       <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors" id="submit-question"> <i class="fas fa-paper-plane"> </i> </button> 
+      </div> 
+     </div> 
+    </div> 
+    <!-- [/MODULE] g9j_右侧对话窗口 -- 显示问题与回答的对话内容 --> 
+    <!-- [MODULE] f8h_右侧聊天区域 --> 
+    <div class="w-full md:w-full p-4 bg-white flex flex-col overflow-y-auto" id="chat-container"> 
+    </div> 
+    <!-- [/MODULE] f8h_右侧聊天区域 -- 显示AI问答的对话内容 --> 
+   </main> 
+   <!-- [/MODULE] e7g_主要内容区域 -- 包含左侧输入区域和右侧对话窗口 --> 
+   <!-- [MODULE] i1l_底部相关链接 --> 
+   <footer class="bg-white border-t border-borderColor py-4 px-5"> 
+    <div class="flex overflow-x-auto pb-2 gap-3"> 
+     <a class="whitespace-nowrap text-primary text-sm hover:underline" href="javascript:void(0);"> <i class="fas fa-image mr-1"> </i> 恢复误删的照片/视频 </a> 
+     <a class="whitespace-nowrap text-primary text-sm hover:underline" href="javascript:void(0);"> <i class="fas fa-hdd mr-1"> </i> 如何恢复被格式化的数据？ </a> 
+     <a class="whitespace-nowrap text-primary text-sm hover:underline" href="javascript:void(0);"> <i class="fas fa-file-alt mr-1"> </i> 文档恢复最佳实践 </a> 
+     <a class="whitespace-nowrap text-primary text-sm hover:underline" href="javascript:void(0);"> <i class="fas fa-laptop mr-1"> </i> 系统还原点使用指南 </a> 
+    </div> 
+   </footer> 
+   <!-- [/MODULE] i1l_底部相关链接 -- 包含多个相关帮助链接，帮助用户解决类似问题 --> 
+  </div> 
+  <!-- [/MODULE] abc_主内容区域 -- 包含顶部导航栏、主要内容区域和底部相关链接 --> 
+  <!-- [JSMOD] j2m_问答交互功能 --> 
+  <script id="chat-functionality">
+   document.addEventListener('DOMContentLoaded', function () {
+  var chatContainer = document.getElementById('chat-container');
+
+  // 添加消息到聊天窗口
+  function addMessageToChat(content, sender) {
+    var messageDiv = document.createElement('div');
+    messageDiv.className = 'flex items-start gap-3';
+    var avatar, bubbleClass, icon;
+    if (sender === 'user') {
+      avatar = 'bg-primary/10 text-primary';
+      bubbleClass = 'chat-bubble-user';
+      icon = 'fa-user';
+    } else {
+      avatar = 'bg-primary text-white';
+      bubbleClass = 'chat-bubble-ai';
+      icon = 'fa-robot';
+    }
+    messageDiv.innerHTML = "<div class=\"w-8 h-8 rounded-full".concat(avatar, "flex items-center justify-center flex-shrink-0\">\n                        <i class=\"fas").concat(icon, "\"></i>\n                    </div>\n                    <div class=\"max-w-[85%]\">\n                        <div class=\"").concat(bubbleClass, "p-3\">\n                            <p>").concat(content, "</p>\n                        </div>\n                        <div class=\"text-xs text-textLight mt-1\">\u521A\u521A</div>\n                    </div>");
+    chatContainer.appendChild(messageDiv);
+    // 滚动到底部
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+  }
+});
+  </script> 
+  <!-- [/JSMOD] j2m_问答交互功能 -- 实现用户提问和AI回答的交互功能，包括提交问题、显示对话和模拟AI回答 --> 
+  <!-- [JSMOD] k3n_响应式调整 --> 
+  <script id="responsive-handler">
+   // 处理窗口大小变化时的响应式调整
+function handleResize() {
+  var chatContainer = document.getElementById('chat-container');
+  if (chatContainer) {
+    // 确保聊天容器高度正确
+    chatContainer.style.height = "calc(100% -".concat(chatContainer.previousElementSibling.offsetHeight, "px)");
+  }
+}
+
+// 初始调用和窗口大小变化时调用
+window.addEventListener('load', handleResize);
+window.addEventListener('resize', handleResize);
+  </script> 
+  <!-- [/JSMOD] k3n_响应式调整 -- 处理窗口大小变化，确保聊天容器高度正确 --> 
+  <!-- [JSMOD] k3j_问题引导点击事件 --> 
+  <script>
+   document.addEventListener('DOMContentLoaded', function () {
+  var questionTags = document.querySelectorAll('[data-question]');
+  var questionInput = document.getElementById('question-input');
+  questionTags.forEach(function (tag) {
+    tag.addEventListener('click', function () {
+      questionInput.value = this.getAttribute('data-question');
+      questionInput.focus();
+    });
+  });
+});
+  </script> 
+  <!-- [/JSMOD] k3j_问题引导点击事件 -- 点击问题标签将问题填充到输入框 --> 
+ </body>
+</html>

@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI问答助手</title>
+  <link rel="stylesheet" href="https://unpkg.com/vant@4/lib/index.css"/>
+  <link rel="stylesheet" href="../font-awesome/css/all.min.css"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      background: #fff;
+      height: 100vh;
+      overflow: hidden;
+    }
+    :root {
+      --van-primary-color: #165DFF;
+      --primary: #165DFF;
+      --text-dark: #1D2129;
+      --text-light: #86909C;
+      --border: #E5E6EB;
+      --bg-ai: #F5F7FA;
+    }
+
+    /* ── 页面骨架 ── */
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .status-bar {
+      flex-shrink: 0;
+      background: #fff;
+      padding: 4px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-dark);
+      border-bottom: 1px solid var(--border);
+    }
+    .status-icons { display: flex; gap: 4px; align-items: center; }
+
+    /* ── 聊天区域 ── */
+    .chat-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px 16px 0;
+      background: var(--bg-ai);
+    }
+
+    /* ── 消息气泡 ── */
+    .msg-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .msg-row.user { flex-direction: row-reverse; }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .avatar.ai { background: var(--primary); color: #fff; }
+    .avatar.user { background: rgba(22,93,255,.12); color: var(--primary); }
+
+    .bubble-wrap { max-width: 78%; }
+    .bubble {
+      padding: 10px 14px;
+      border-radius: 2px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-dark);
+      word-break: break-word;
+    }
+    .bubble.ai {
+      background: #fff;
+      border-radius: 0 10px 10px 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .bubble.user {
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px 0 10px 10px;
+    }
+    .msg-time {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 4px;
+      padding: 0 2px;
+    }
+    .msg-row.user .msg-time { text-align: right; }
+
+    /* 打字动画 */
+    .typing-dots {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      height: 20px;
+    }
+    .typing-dots span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c9cdd4;
+      animation: dot-blink 1.2s infinite;
+    }
+    .typing-dots span:nth-child(2) { animation-delay: .2s; }
+    .typing-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes dot-blink {
+      0%, 80%, 100% { opacity: .3; }
+      40% { opacity: 1; }
+    }
+
+    /* ── 建议问题区域 ── */
+    .suggestions-area {
+      flex-shrink: 0;
+      padding: 10px 16px 8px;
+      background: #fff;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .suggestion-chip {
+      padding: 5px 12px;
+      background: var(--bg-ai);
+      border-radius: 14px;
+      font-size: 12px;
+      color: var(--text-dark);
+      cursor: pointer;
+      transition: background .15s;
+      -webkit-tap-highlight-color: transparent;
+      border: none;
+      outline: none;
+    }
+    .suggestion-chip:active { background: rgba(22,93,255,.1); color: var(--primary); }
+
+    /* ── 输入栏 ── */
+    .input-bar {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      background: #fff;
+      border-top: 1px solid var(--border);
+    }
+    .input-bar .van-field {
+      flex: 1;
+      background: var(--bg-ai);
+      border-radius: 20px;
+      padding: 0 16px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="app-shell">
+    <!-- StatusBar -->
+    <status-bar />
+
+    <!-- NavBar -->
+    <van-nav-bar title="AI问答助手" :border="true" />
+
+    <!-- ChatList：聊天消息列表，flex-1 独立滚动 -->
+    <chat-list
+      :messages="messages"
+      :is-loading="isLoading"
+      ref="chatListRef"
+    />
+
+    <!-- SuggestedQuestions：快捷问题 chips -->
+    <suggested-questions
+      :questions="suggestions"
+      @select="onSelectSuggestion"
+    />
+
+    <!-- ChatInputBar：输入框 + 发送 -->
+    <chat-input-bar
+      v-model:text="inputText"
+      :sending="isLoading"
+      @send="onSend"
+    />
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/vant@4/lib/vant.min.js"></script>
+<script>
+const { createApp, ref, nextTick, onMounted, watch } = Vue;
+
+// ─── StatusBar ──────────────────────────────────────────────
+const StatusBar = {
+  name: 'StatusBar',
+  template: `
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <i class="fas fa-battery-full" style="font-size:11px"></i>
+        <span style="font-size:10px">100%</span>
+      </div>
+    </div>
+  `
+};
+
+// ─── ChatMessage ────────────────────────────────────────────
+// 职责：渲染单条消息（用户或 AI），纯展示
+const ChatMessage = {
+  name: 'ChatMessage',
+  props: {
+    message: { type: Object, required: true }  // { type: 'ai'|'user', content, time, loading? }
+  },
+  computed: {
+    isUser() { return this.message.type === 'user'; },
+  },
+  template: `
+    <div :class="['msg-row', isUser ? 'user' : '']">
+      <div :class="['avatar', isUser ? 'user' : 'ai']">
+        <i :class="isUser ? 'fas fa-user' : 'fas fa-robot'"></i>
+      </div>
+      <div class="bubble-wrap">
+        <div :class="['bubble', isUser ? 'user' : 'ai']">
+          <template v-if="message.loading">
+            <div class="typing-dots">
+              <span></span><span></span><span></span>
+            </div>
+          </template>
+          <template v-else>{{ message.content }}</template>
+        </div>
+        <div class="msg-time">{{ message.time }}</div>
+      </div>
+    </div>
+  `
+};
+
+// ─── ChatList ───────────────────────────────────────────────
+// 职责：渲染消息列表，自动滚动到底部
+const ChatList = {
+  name: 'ChatList',
+  components: { ChatMessage },
+  props: {
+    messages: { type: Array, required: true },
+    isLoading: { type: Boolean, default: false },
+  },
+  setup() {
+    const containerRef = ref(null);
+
+    function scrollToBottom() {
+      nextTick(() => {
+        if (containerRef.value) {
+          containerRef.value.scrollTop = containerRef.value.scrollHeight;
+        }
+      });
+    }
+
+    return { containerRef, scrollToBottom };
+  },
+  template: `
+    <div class="chat-area" ref="containerRef">
+      <chat-message
+        v-for="(msg, idx) in messages"
+        :key="idx"
+        :message="msg"
+      />
+    </div>
+  `
+};
+
+// ─── SuggestedQuestions ─────────────────────────────────────
+// 职责：渲染建议问题 chips，emit select 事件
+const SuggestedQuestions = {
+  name: 'SuggestedQuestions',
+  props: {
+    questions: { type: Array, required: true }
+  },
+  emits: ['select'],
+  template: `
+    <div class="suggestions-area">
+      <button
+        v-for="q in questions"
+        :key="q"
+        class="suggestion-chip"
+        @click="$emit('select', q)"
+      >{{ q }}</button>
+    </div>
+  `
+};
+
+// ─── ChatInputBar ───────────────────────────────────────────
+// 职责：输入框 + 发送按钮，props-down/events-up
+const ChatInputBar = {
+  name: 'ChatInputBar',
+  props: {
+    text: { type: String, default: '' },
+    sending: { type: Boolean, default: false },
+  },
+  emits: ['update:text', 'send'],
+  setup(props, { emit }) {
+    function handleKeydown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        emit('send');
+      }
+    }
+    return {
+      onInput: (val) => emit('update:text', val),
+      onSend: () => emit('send'),
+      handleKeydown,
+    };
+  },
+  template: `
+    <div class="input-bar">
+      <van-field
+        :model-value="text"
+        placeholder="请输入您关于内控的问题…"
+        :disabled="sending"
+        @update:model-value="onInput"
+        @keydown="handleKeydown"
+        clearable
+        :border="false"
+      />
+      <van-button
+        type="primary"
+        :loading="sending"
+        round
+        style="width:40px;height:40px;padding:0"
+        @click="onSend"
+      >
+        <i v-if="!sending" class="fas fa-paper-plane" style="font-size:14px"></i>
+      </van-button>
+    </div>
+  `
+};
+
+// ─── useChat composable ──────────────────────────────────────
+// 职责：消息状态 + 发送逻辑，与 UI 完全解耦
+function useChat() {
+  const messages = ref([
+    {
+      type: 'ai',
+      content: '您好！我是内控手册AI助手，可以为您解答关于内部控制执行手册的相关问题，例如，您可以询问：核保环节有什么需要注意的？',
+      time: '刚刚',
+    }
+  ]);
+  const inputText = ref('');
+  const isLoading = ref(false);
+
+  // 模拟 AI 回复内容（实际对接时替换为接口调用）
+  const aiReplies = {
+    '销售环节有哪些风险点？': '销售环节主要风险点包括：①不实陈述与误导销售；②销售人员资质不合规；③销售材料未经审批擅自使用；④双录（录音录像）执行不到位；⑤客户信息采集不完整。建议参照《个险销售合规管理办法》执行。',
+    '理赔服务的控制措施有哪些？': '理赔服务控制措施包括：①建立理赔材料核实机制；②实施理赔时效管理（普通案件3个工作日内）；③对大额案件启动专项核查；④定期开展反欺诈排查；⑤理赔结果与客户充分沟通确认。',
+    '公共控制措施包括哪些？': '公共控制措施主要涵盖：①授权审批控制；②不相容职务分离；③信息系统访问权限管控；④档案及重要文件管理；⑤内控自评与监督检查；⑥内部举报与合规文化建设。',
+    '个险条线的控制措施有哪些？': '个险条线的控制措施包括：①代理人招募与资质审核；②业务培训与考核管理；③保费收付合规控制；④佣金核算与发放审核；⑤业务质量回访抽检；⑥脱落率与续期追踪管理。',
+  };
+
+  async function sendMessage() {
+    const text = inputText.value.trim();
+    if (!text || isLoading.value) return;
+
+    messages.value.push({ type: 'user', content: text, time: '刚刚' });
+    inputText.value = '';
+    isLoading.value = true;
+
+    // loading 气泡
+    messages.value.push({ type: 'ai', content: '', time: '刚刚', loading: true });
+
+    await new Promise(r => setTimeout(r, 1200));
+
+    // 替换 loading 气泡为实际回复
+    const reply = aiReplies[text] ||
+      `关于"${text}"，根据内控手册相关规定，建议您查阅对应业务模块的控制流程章节，或联系合规部门进行专项咨询。`;
+
+    messages.value.splice(messages.value.length - 1, 1, {
+      type: 'ai',
+      content: reply,
+      time: '刚刚',
+    });
+    isLoading.value = false;
+  }
+
+  function selectSuggestion(q) {
+    inputText.value = q;
+  }
+
+  return { messages, inputText, isLoading, sendMessage, selectSuggestion };
+}
+
+// ─── App（组合层，保持薄）───────────────────────────────────
+const app = createApp({
+  components: { StatusBar, ChatList, SuggestedQuestions, ChatInputBar },
+  setup() {
+    const { messages, inputText, isLoading, sendMessage, selectSuggestion } = useChat();
+
+    const chatListRef = ref(null);
+
+    const suggestions = [
+      '销售环节有哪些风险点？',
+      '理赔服务的控制措施有哪些？',
+      '公共控制措施包括哪些？',
+      '个险条线的控制措施有哪些？',
+    ];
+
+    // 消息更新后自动滚动到底部
+    watch(messages, () => {
+      nextTick(() => {
+        if (chatListRef.value) {
+          chatListRef.value.scrollToBottom();
+        }
+      });
+    }, { deep: true });
+
+    function onSend() {
+      sendMessage();
+    }
+
+    function onSelectSuggestion(q) {
+      selectSuggestion(q);
+    }
+
+    return {
+      messages, inputText, isLoading, suggestions,
+      chatListRef, onSend, onSelectSuggestion,
+    };
+  }
+});
+
+app.use(vant);
+app.mount('#app');
+</script>
+</body>
+</html>

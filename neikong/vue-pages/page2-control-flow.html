@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>保全服务基本控制流程</title>
+  <link rel="stylesheet" href="https://unpkg.com/vant@4/lib/index.css"/>
+  <link rel="stylesheet" href="../font-awesome/css/all.min.css"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      background: #f5f7fa;
+      overflow: hidden;
+      height: 100vh;
+    }
+    :root {
+      --van-primary-color: #165DFF;
+      --primary: #165DFF;
+    }
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    .status-bar {
+      flex-shrink: 0;
+      background: #fff;
+      padding: 5px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #333;
+    }
+    .status-icons { display: flex; gap: 5px; align-items: center; }
+
+    /* 表格区域 */
+    .scroll-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 0 16px;
+    }
+    .page-title-wrap {
+      padding: 14px 16px 10px;
+      text-align: center;
+    }
+    .page-title-wrap h1 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1d2129;
+    }
+    .risk-card {
+      background: #fff;
+      border-radius: 8px;
+      margin: 0 12px 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+
+    /* 表头 */
+    .table-header {
+      display: grid;
+      grid-template-columns: 2fr 3fr 2fr;
+      background: #f2f3f5;
+      border-bottom: 1px solid #e5e6eb;
+    }
+    .table-header span {
+      padding: 8px 6px;
+      font-size: 11px;
+      font-weight: 500;
+      color: #86909c;
+      text-transform: uppercase;
+      letter-spacing: .2px;
+    }
+
+    /* 数据行 */
+    .table-row {
+      display: grid;
+      grid-template-columns: 2fr 3fr 2fr;
+      border-bottom: 1px solid #f2f3f5;
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .table-row:hover { background: #f9fbff; }
+    .table-row:last-child { border-bottom: none; }
+    .table-cell {
+      padding: 10px 6px;
+      font-size: 12px;
+      color: #1d2129;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .cell-with-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+    }
+    .cell-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+    .arrow-icon {
+      flex-shrink: 0;
+      color: #c9cdd4;
+      font-size: 10px;
+      transition: transform .2s;
+    }
+    .arrow-icon.expanded { transform: rotate(180deg); }
+
+    /* 详情展开面板 */
+    .detail-panel {
+      background: #f9fbff;
+      border-bottom: 1px solid #e5e6eb;
+      padding: 12px 16px;
+    }
+    .detail-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .detail-item:last-child { margin-bottom: 0; }
+    .detail-accent {
+      width: 3px;
+      height: 100%;
+      min-height: 36px;
+      background: #165DFF;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .detail-content { flex: 1; }
+    .detail-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #86909c;
+      margin-bottom: 2px;
+    }
+    .detail-value { font-size: 13px; color: #1d2129; }
+
+    /* 占位行 */
+    .placeholder { color: #c9cdd4; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="app-shell">
+    <!-- StatusBar -->
+    <status-bar />
+
+    <!-- NavBar -->
+    <van-nav-bar title="" :border="false" />
+
+    <!-- 内容区域 -->
+    <div class="scroll-area">
+      <div class="page-title-wrap">
+        <h1>保全服务基本控制流程</h1>
+      </div>
+
+      <div class="risk-card">
+        <!-- 表头 -->
+        <risk-table-header />
+
+        <!-- 数据行 -->
+        <risk-row
+          v-for="item in riskItems"
+          :key="item.id"
+          :item="item"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/vant@4/lib/vant.min.js"></script>
+<script>
+const { createApp, ref } = Vue;
+
+// ─── StatusBar ──────────────────────────────────────────────
+const StatusBar = {
+  name: 'StatusBar',
+  template: `
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <i class="fas fa-signal" style="font-size:11px"></i>
+        <i class="fas fa-wifi" style="font-size:11px"></i>
+        <i class="fas fa-battery-full" style="font-size:11px"></i>
+      </div>
+    </div>
+  `
+};
+
+// ─── RiskTableHeader ────────────────────────────────────────
+// 职责：渲染表格列头，无状态
+const RiskTableHeader = {
+  name: 'RiskTableHeader',
+  template: `
+    <div class="table-header">
+      <span>风险点名称</span>
+      <span>控制措施描述</span>
+      <span>执行控制层级</span>
+    </div>
+  `
+};
+
+// ─── DetailPanel ────────────────────────────────────────────
+// 职责：展示展开后的详情字段，纯展示
+const DetailPanel = {
+  name: 'DetailPanel',
+  props: {
+    details: { type: Object, required: true }
+  },
+  template: `
+    <div class="detail-panel">
+      <div class="detail-item" v-for="field in fields" :key="field.label">
+        <div class="detail-accent"></div>
+        <div class="detail-content">
+          <div class="detail-label">{{ field.label }}</div>
+          <div class="detail-value">{{ field.value }}</div>
+        </div>
+      </div>
+    </div>
+  `,
+  computed: {
+    fields() {
+      const d = this.details;
+      return [
+        { label: '风险点名称', value: d.riskName },
+        { label: '控制措施描述', value: d.controlMeasure },
+        { label: '执行控制的层级', value: d.controlLevel },
+        { label: '总部牵头部门', value: d.headDeptHQ },
+        { label: '省公司牵头部门', value: d.headDeptProvince },
+        { label: '地市公司牵头部门', value: d.headDeptCity },
+        { label: '县支公司牵头部门', value: d.headDeptCounty },
+        { label: '控制制度名称', value: d.controlSystem },
+        { label: '控制制度描述', value: d.controlDesc },
+      ];
+    }
+  }
+};
+
+// ─── RiskRow ────────────────────────────────────────────────
+// 职责：单行数据 + 本地展开/收起状态
+const RiskRow = {
+  name: 'RiskRow',
+  components: { DetailPanel },
+  props: {
+    item: { type: Object, required: true }
+  },
+  setup(props) {
+    const isExpanded = ref(false);
+    function toggle() {
+      if (!props.item.details) return;
+      isExpanded.value = !isExpanded.value;
+    }
+    return { isExpanded, toggle };
+  },
+  template: `
+    <div>
+      <div class="table-row" @click="toggle">
+        <div class="table-cell cell-with-arrow">
+          <span class="cell-text" :class="{ placeholder: !item.real }">{{ item.riskName }}</span>
+          <i v-if="item.details"
+             class="fas fa-chevron-down arrow-icon"
+             :class="{ expanded: isExpanded }">
+          </i>
+        </div>
+        <div class="table-cell" :class="{ placeholder: !item.real }">{{ item.controlMeasure }}</div>
+        <div class="table-cell" :class="{ placeholder: !item.real }">{{ item.controlLevel }}</div>
+      </div>
+      <detail-panel v-if="isExpanded && item.details" :details="item.details" />
+    </div>
+  `
+};
+
+// ─── 数据 ────────────────────────────────────────────────────
+const riskItems = [
+  {
+    id: 1,
+    real: true,
+    riskName: '精算评估方法不符合会计准则',
+    controlMeasure: '精算部和财务部跟踪相关监管机构发布的会计准则等',
+    controlLevel: '总公司',
+    details: {
+      riskName: '精算评估方法不符合会计准则',
+      controlMeasure: '精算部和财务部跟踪相关监管机构发布的会计准则等',
+      controlLevel: '总公司',
+      headDeptHQ: '精算部',
+      headDeptProvince: '无',
+      headDeptCity: '无',
+      headDeptCounty: '无',
+      controlSystem: '日常步骤操作',
+      controlDesc: '不适用',
+    }
+  },
+  ...Array.from({ length: 9 }, (_, i) => ({
+    id: i + 2,
+    real: false,
+    riskName: 'xxxxxxxxxx',
+    controlMeasure: 'xxxxxxxxxx',
+    controlLevel: 'xxxxxxxxxx',
+    details: null,
+  }))
+];
+
+// ─── App ────────────────────────────────────────────────────
+const app = createApp({
+  components: { StatusBar, RiskTableHeader, RiskRow },
+  setup() {
+    return { riskItems };
+  }
+});
+
+app.use(vant);
+app.mount('#app');
+</script>
+</body>
+</html>

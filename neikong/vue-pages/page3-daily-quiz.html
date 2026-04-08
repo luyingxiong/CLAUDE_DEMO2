@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>每日一题</title>
+  <link rel="stylesheet" href="https://unpkg.com/vant@4/lib/index.css"/>
+  <link rel="stylesheet" href="../font-awesome/css/all.min.css"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, 'PingFang SC', sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+    }
+    :root {
+      --van-primary-color: #2196F3;
+      --primary: #2196F3;
+      --error: #F44336;
+    }
+
+    .status-bar {
+      background: #fff;
+      padding: 5px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #333;
+      border-bottom: 1px solid #eee;
+    }
+    .status-icons { display: flex; gap: 5px; align-items: center; }
+
+    .page-wrap {
+      padding: 16px 16px 32px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* 题目卡片 */
+    .quiz-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    }
+
+    /* 头部：日期 + 第N天 */
+    .quiz-header {
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f2f3f5;
+    }
+    .quiz-date { font-size: 13px; color: #86909c; }
+    .quiz-day { font-size: 13px; font-weight: 600; color: #2196F3; }
+
+    /* 题干 */
+    .question-body { padding: 20px 20px 8px; }
+    .question-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: #1d2129;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    /* 选项 */
+    .option-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border: 1.5px solid #e5e6eb;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .18s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .option-item:active { opacity: .85; }
+    .option-item.selected {
+      border-color: #2196F3;
+      background: rgba(33,150,243,.06);
+    }
+    .option-item.correct {
+      border-color: #52c41a;
+      background: rgba(82,196,26,.06);
+    }
+    .option-item.wrong {
+      border-color: #F44336;
+      background: rgba(244,67,54,.06);
+    }
+    .option-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid #c9cdd4;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      transition: all .18s;
+    }
+    .option-item.selected .option-radio { border-color: #2196F3; }
+    .option-item.correct .option-radio {
+      border-color: #52c41a;
+      background: #52c41a;
+      color: #fff;
+    }
+    .option-item.wrong .option-radio {
+      border-color: #F44336;
+      background: #F44336;
+      color: #fff;
+    }
+    .option-label { font-size: 14px; color: #1d2129; line-height: 1.5; }
+
+    /* 反馈 */
+    .feedback-panel {
+      margin: 0 0 16px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .feedback-panel.success { background: #f0fdf4; color: #15803d; }
+    .feedback-panel.error   { background: #fef2f2; color: #dc2626; }
+    .feedback-panel.info    { background: #eff6ff; color: #1d4ed8; }
+
+    /* 操作按钮区 */
+    .action-row {
+      padding: 0 20px 20px;
+      display: flex;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <!-- StatusBar -->
+  <status-bar />
+
+  <div class="page-wrap">
+    <div class="quiz-card">
+      <!-- QuizHeader：日期 + 天数 -->
+      <quiz-header :date="question.date" :day="question.day" />
+
+      <div class="question-body">
+        <!-- QuestionText：题干 -->
+        <p class="question-text">{{ question.text }}</p>
+
+        <!-- OptionList：选项列表，props-down events-up -->
+        <option-list
+          :options="question.options"
+          :selected="selected"
+          :is-answered="isAnswered"
+          :correct-answer="question.answer"
+          @select="selectOption"
+        />
+
+        <!-- FeedbackPanel：反馈区，仅在答题后显示 -->
+        <feedback-panel
+          v-if="isAnswered"
+          :text="feedbackText"
+          :type="feedbackType"
+        />
+
+        <!-- QuizActions：操作按钮 -->
+        <quiz-actions
+          :is-answered="isAnswered"
+          :has-selection="!!selected"
+          @submit="submit"
+          @view-answer="viewAnswer"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/vant@4/lib/vant.min.js"></script>
+<script>
+const { createApp, ref, computed } = Vue;
+
+// ─── StatusBar ──────────────────────────────────────────────
+const StatusBar = {
+  name: 'StatusBar',
+  template: `
+    <div class="status-bar">
+      <span><i class="far fa-clock" style="margin-right:3px"></i>09:41</span>
+      <div class="status-icons">
+        <i class="fas fa-signal" style="font-size:11px"></i>
+        <i class="fas fa-wifi" style="font-size:11px"></i>
+        <i class="fas fa-battery-three-quarters" style="font-size:11px"></i>
+      </div>
+    </div>
+  `
+};
+
+// ─── QuizHeader ─────────────────────────────────────────────
+// 职责：展示日期和打卡天数，纯展示
+const QuizHeader = {
+  name: 'QuizHeader',
+  props: {
+    date: { type: String, required: true },
+    day: { type: Number, required: true },
+  },
+  template: `
+    <div class="quiz-header">
+      <span class="quiz-date">{{ date }}</span>
+      <span class="quiz-day">第{{ day }}天</span>
+    </div>
+  `
+};
+
+// ─── OptionItem ─────────────────────────────────────────────
+// 职责：渲染单个选项，根据状态显示样式
+const OptionItem = {
+  name: 'OptionItem',
+  props: {
+    option: { type: Object, required: true },  // { label, text }
+    selected: { type: String, default: null },
+    isAnswered: { type: Boolean, default: false },
+    correctAnswer: { type: String, required: true },
+  },
+  emits: ['select'],
+  setup(props, { emit }) {
+    const isSelected = computed(() => props.selected === props.option.label);
+    const isCorrect = computed(() =>
+      props.isAnswered && props.option.label === props.correctAnswer
+    );
+    const isWrong = computed(() =>
+      props.isAnswered && isSelected.value && props.option.label !== props.correctAnswer
+    );
+    const cls = computed(() => ({
+      'option-item': true,
+      selected: isSelected.value && !props.isAnswered,
+      correct: isCorrect.value,
+      wrong: isWrong.value,
+    }));
+
+    return { isSelected, isCorrect, isWrong, cls, onClick: () => emit('select', props.option.label) };
+  },
+  template: `
+    <div :class="cls" @click="onClick">
+      <div class="option-radio">
+        <i v-if="isCorrect" class="fas fa-check"></i>
+        <i v-else-if="isWrong" class="fas fa-times"></i>
+      </div>
+      <span class="option-label"><strong>{{ option.label }}.</strong>&nbsp;{{ option.text }}</span>
+    </div>
+  `
+};
+
+// ─── OptionList ─────────────────────────────────────────────
+// 职责：渲染选项列表，转发 select 事件
+const OptionList = {
+  name: 'OptionList',
+  components: { OptionItem },
+  props: {
+    options: Array,
+    selected: String,
+    isAnswered: Boolean,
+    correctAnswer: String,
+  },
+  emits: ['select'],
+  template: `
+    <div class="option-list">
+      <option-item
+        v-for="opt in options"
+        :key="opt.label"
+        :option="opt"
+        :selected="selected"
+        :is-answered="isAnswered"
+        :correct-answer="correctAnswer"
+        @select="$emit('select', $event)"
+      />
+    </div>
+  `
+};
+
+// ─── FeedbackPanel ──────────────────────────────────────────
+// 职责：展示答题反馈，纯展示
+const FeedbackPanel = {
+  name: 'FeedbackPanel',
+  props: {
+    text: { type: String, required: true },
+    type: { type: String, default: 'info' }, // success | error | info
+  },
+  template: `
+    <div :class="['feedback-panel', type]">
+      <i :class="iconClass" style="margin-right:6px"></i>{{ text }}
+    </div>
+  `,
+  computed: {
+    iconClass() {
+      const map = { success: 'fas fa-check-circle', error: 'fas fa-times-circle', info: 'fas fa-info-circle' };
+      return map[this.type] || 'fas fa-info-circle';
+    }
+  }
+};
+
+// ─── QuizActions ────────────────────────────────────────────
+// 职责：操作按钮（提交 / 查看答案），emit 事件
+const QuizActions = {
+  name: 'QuizActions',
+  props: {
+    isAnswered: { type: Boolean, default: false },
+    hasSelection: { type: Boolean, default: false },
+  },
+  emits: ['submit', 'view-answer'],
+  template: `
+    <div class="action-row">
+      <van-button
+        type="primary"
+        block
+        :disabled="isAnswered"
+        @click="$emit('submit')"
+        style="flex:1"
+      >
+        提交答案
+      </van-button>
+      <van-button
+        plain
+        block
+        :disabled="isAnswered"
+        @click="$emit('view-answer')"
+        style="flex:1"
+      >
+        查看答案
+      </van-button>
+    </div>
+  `
+};
+
+// ─── useQuiz composable ──────────────────────────────────────
+// 职责：答题状态管理，与 UI 完全解耦
+function useQuiz(question) {
+  const selected = ref(null);
+  const isAnswered = ref(false);
+  const feedbackText = ref('');
+  const feedbackType = ref('info');
+
+  function selectOption(label) {
+    if (isAnswered.value) return;
+    selected.value = label;
+  }
+
+  function submit() {
+    if (!selected.value) {
+      vant.showToast({ message: '请先选择一个答案', position: 'bottom' });
+      return;
+    }
+    isAnswered.value = true;
+    if (selected.value === question.answer) {
+      feedbackText.value = `回答正确！正确答案：${question.answerText}`;
+      feedbackType.value = 'success';
+    } else {
+      feedbackText.value = `回答错误！正确答案：${question.answerText}`;
+      feedbackType.value = 'error';
+    }
+  }
+
+  function viewAnswer() {
+    if (isAnswered.value) return;
+    isAnswered.value = true;
+    selected.value = question.answer;
+    feedbackText.value = `正确答案：${question.answerText}`;
+    feedbackType.value = 'info';
+  }
+
+  return { selected, isAnswered, feedbackText, feedbackType, selectOption, submit, viewAnswer };
+}
+
+// ─── 题目数据 ────────────────────────────────────────────────
+const questionData = {
+  date: '2024年10月31日 周四',
+  day: 25,
+  text: '在投保前投经过程中，对于投资人年龄超过60周岁的领单，应进行_复核，并重点关注其健康状况。',
+  answer: 'A',
+  answerText: '额外核验',
+  options: [
+    { label: 'A', text: '额外核验' },
+    { label: 'B', text: '申请核查' },
+    { label: 'C', text: '补齐审核' },
+    { label: 'D', text: '上报审批' },
+  ],
+};
+
+// ─── App（组合层）──────────────────────────────────────────
+const app = createApp({
+  components: { StatusBar, QuizHeader, OptionList, FeedbackPanel, QuizActions },
+  setup() {
+    const { selected, isAnswered, feedbackText, feedbackType, selectOption, submit, viewAnswer }
+      = useQuiz(questionData);
+
+    return {
+      question: questionData,
+      selected, isAnswered, feedbackText, feedbackType,
+      selectOption, submit, viewAnswer,
+    };
+  }
+});
+
+app.use(vant);
+app.mount('#app');
+</script>
+</body>
+</html>

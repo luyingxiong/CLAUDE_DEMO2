@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="zh-CN">
+ <head> 
+  <meta charset="utf-8"> 
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"> 
+  <title>内控矩阵</title> 
+  <script src="../javascript/reload.js"></script> 
+  <script src="./2031286331811823616/resource_6928310000.js"></script> 
+  <link href="./2031286331811823616/all.min.css" rel="stylesheet"> 
+  <script>tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#165DFF',
+        secondary: '#722ED1',
+        accent: '#FF7D00',
+        warning: '#FFAA00',
+        success: '#00B42A',
+        danger: '#F53F3F',
+        dark: '#1D2129',
+        'dark-2': '#4E5969',
+        'light-1': '#F2F3F5',
+        'light-2': '#E5E6EB',
+        'light-3': '#C9CDD4'
+      },
+      fontFamily: {
+        inter: ['Inter', 'system-ui', 'sans-serif']
+      }
+    }
+  }
+};</script> 
+  <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .nav-item-active {
+                @apply bg-primary/10 text-primary border-l-4 border-primary;
+            }
+            .nav-item-hover {
+                @apply hover:bg-primary/5 transition-colors duration-200;
+            }
+            .search-input-focus {
+                @apply focus:ring-2 focus:ring-primary/30 focus:border-primary;
+            }
+            .letter-nav-item {
+                @apply w-8 h-8 flex items-center justify-center rounded-full text-sm font-medium transition-all duration-200;
+            }
+            .letter-nav-item-active {
+                @apply bg-primary text-white;
+            }
+            .letter-nav-item-hover {
+                @apply hover:bg-primary/10 hover:text-primary;
+            }
+        }
+    </style> 
+ </head> 
+ <body class="font-inter bg-white text-dark min-h-screen flex flex-col"> 
+  <!-- [MODULE] a7f_主内容区域 --> 
+  <div class="flex flex-1 overflow-hidden"> 
+   <!-- [MODULE] b3c_左侧导航栏 --> 
+   <aside class="w-64 bg-white border-r border-light-2 flex-shrink-0 hidden md:block overflow-y-auto"> 
+    <div class="p-4 border-b border-light-2"> 
+     <h1 class="text-xl font-bold text-primary flex items-center"> <i class="fas fa-shield-alt mr-2"> </i> <span class="yt-editor" contenteditable="false" style="outline: none;"> 中国人寿 </span> </h1> 
+    </div> 
+    <nav class="p-2"> 
+     <div class="text-dark-2 text-xs uppercase font-semibold px-3 py-2">
+       主导航 
+     </div> 
+     <a class="nav-item-active nav-item-hover flex items-center px-3 py-3 text-sm rounded-md" href="javascript:void(0);"> <i class="fas fa-sitemap w-5 text-center mr-3"> </i> <span> 内控矩阵 </span> </a> 
+     <a class="nav-item-hover flex items-center px-3 py-3 text-sm rounded-md text-dark-2" href="javascript:void(0);"> <i class="fas fa-chart-line w-5 text-center mr-3"> </i> <span class contenteditable="false" style="outline: none;"> xxxx </span> </a> 
+     <a class="nav-item-hover flex items-center px-3 py-3 text-sm rounded-md text-dark-2" href="javascript:void(0);"> <i class="fas fa-check-square w-5 text-center mr-3"> </i> <span class contenteditable="false" style="outline: none;"> xxxxx </span> </a> 
+     <a class="nav-item-hover flex items-center px-3 py-3 text-sm rounded-md text-dark-2" href="javascript:void(0);"> <i class="fas fa-exclamation-triangle w-5 text-center mr-3"> </i> <span class contenteditable="false" style="outline: none;"> xxxx </span> </a> 
+     <a class="nav-item-hover flex items-center px-3 py-3 text-sm rounded-md text-dark-2" href="javascript:void(0);"> <i class="fas fa-file-alt w-5 text-center mr-3"> </i> <span class contenteditable="false" style="outline: none;"> xxxxx </span> </a> 
+     <a class="nav-item-hover flex items-center px-3 py-3 text-sm rounded-md text-dark-2" href="javascript:void(0);"> <i class="fas fa-cog w-5 text-center mr-3"> </i> <span class contenteditable="false" style="outline: none;"> xxxxx </span> </a> 
+    </nav> 
+   </aside> 
+   <!-- [/MODULE] b3c_左侧导航栏 -- 包含系统主导航菜单，当前选中"内控矩阵"菜单项 --> 
+   <!-- [MODULE] c5d_主内容区 --> 
+   <main class="flex-1 overflow-y-auto bg-light-1"> 
+    <!-- [MODULE] d1f_页面头部 --> 
+    <header class="bg-white shadow-sm sticky top-0 z-10"> 
+     <div class="flex items-center justify-between p-4"> 
+      <div class="flex items-center"> 
+       <button class="md:hidden mr-3 text-dark-2" id="mobile-menu-btn"> <i class="fas fa-bars text-xl"> </i> </button> 
+       <h2 class="text-lg font-semibold" contenteditable="false" style="outline: none;"> 全面风险管理系统 </h2> 
+      </div> 
+      <div class="flex items-center space-x-4"> 
+       <button class="text-dark-2 hover:text-primary transition-colors"> <i class="fas fa-bell text-xl"> </i> </button> 
+       <div class="flex items-center"> 
+        <img alt="用户头像" class="w-8 h-8 rounded-full object-cover mr-2" src="./2031286331811823616/674f61d0be961ed1e772691909a04dfa.png"> 
+        <span class="text-sm hidden md:inline"> 管理员 </span> 
+        <i class="fas fa-chevron-down text-xs ml-1 text-dark-2"> </i> 
+       </div> 
+      </div> 
+     </div> 
+    </header> 
+    <!-- [/MODULE] d1f_页面头部 -- 包含页面标题和用户信息 --> 
+    <!-- [MODULE] f4h_字母导航 --> 
+    <div class="fixed right-4 top-1/2 transform -translate-y-1/2 z-40"> 
+    </div> 
+    <!-- [/MODULE] f4h_字母导航 -- 包含从A到Z的字母导航按钮和全部按钮 --> 
+    <!-- [MODULE] g6i_保全服务基本控制流程 --> 
+    <div class="p-4 mt-4"> 
+     <div class="bg-white rounded-lg shadow-sm overflow-hidden"> 
+      <div class="p-4 border-b border-light-2"> 
+       <h3 class="font-medium text-lg"> 保全服务基本控制流程 </h3> 
+      </div> 
+      <!-- [MODULE] h2f_查询区域 --> 
+      <div class="p-4 bg-white border-b border-light-2"> 
+       <div class="flex flex-wrap gap-4 items-center"> 
+        <div class="flex items-center gap-2"> 
+         <label class="text-sm font-medium text-dark-2"> 风险点名称: </label> 
+         <input class="px-3 py-2 border border-light-3 rounded-md focus:outline-none search-input-focus text-sm w-48" id="risk-name" type="text"> 
+        </div> 
+        <div class="flex items-center gap-2"> 
+         <label class="text-sm font-medium text-dark-2"> 执行控制的层级: </label> 
+         <input class="px-3 py-2 border border-light-3 rounded-md focus:outline-none search-input-focus text-sm w-48" id="control-level" type="text"> 
+        </div> 
+        <div class="flex items-center gap-2"> 
+         <label class="text-sm font-medium text-dark-2"> 牵头部门: </label> 
+         <input class="px-3 py-2 border border-light-3 rounded-md focus:outline-none search-input-focus text-sm w-48" id="lead-dept" type="text"> 
+        </div> 
+        <div class="flex gap-2 ml-auto"> 
+         <button class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors text-sm" id="search-btn"> <i class="fas fa-search mr-2"> </i> 查询 </button> 
+         <button class="px-4 py-2 bg-success text-white rounded-md hover:bg-success/90 transition-colors text-sm" id="export-btn"> <i class="fas fa-download mr-2"> </i> 导出 </button> 
+        </div> 
+       </div> 
+      </div> 
+      <!-- [/MODULE] h2f_查询区域 -- 包含风险点名称、执行控制的层级、牵头部门查询字段和查询、导出按钮 --> 
+      <div class="overflow-x-auto p-1 bg-white"> 
+       <table class="w-full border-collapse min-w-[1200px]"> 
+        <thead> 
+         <tr class="bg-light-1"> 
+          <th class="px-4 py-2 text-center text-sm font-medium text-dark-2 border-b border-light-2 w-10"> <input class="rounded text-primary focus:ring-primary/30" id="select-all" style="padding-bottom:0px" type="checkbox"> </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[120px]"> 风险点名称 </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[200px]"> 控制措施描述 </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[120px]"> 执行控制的层级 </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[120px]"> 总部牵头部门 </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[120px]"> 省级牵头部门 </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[120px]"> 市级牵头部门 </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[120px]"> 县级牵头部门 </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[120px]"> 控制制度编号 </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[120px]"> 控制制度名称 </th> 
+          <th class="px-4 py-2 text-left text-sm font-medium text-dark-2 border-b border-light-2 min-w-[200px]"> 控制制度描述 </th> 
+         </tr> 
+        </thead> 
+        <tbody> 
+         <tr class="bg-white"> 
+          <td class="px-4 py-3 text-center text-sm text-dark border-b border-light-2 w-10"> <input class="row-checkbox rounded text-primary focus:ring-primary/30" type="checkbox"> </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> <span class="truncate max-w-xs cursor-help delegate-process-link" title="委托办理流程不合规"> 委托办理流程不合规 </span> </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[200px]"> <span class="truncate max-w-xs cursor-help" title="xxxx"> xxxx </span> </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[200px]"> <span class="truncate max-w-xs cursor-help" title="xxxx"> xxxx </span> </td> 
+         </tr> 
+         <tr class="bg-light-1/50"> 
+          <td class="px-4 py-3 text-center text-sm text-dark border-b border-light-2 w-10"> <input class="row-checkbox rounded text-primary focus:ring-primary/30" type="checkbox"> </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> <span class="truncate max-w-xs cursor-help" title="xxxx"> xxxx </span> </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[200px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[200px]"> <span class="truncate max-w-xs cursor-help" title="xxxx"> xxxx </span> </td> 
+         </tr> 
+         <tr class="bg-white"> 
+          <td class="px-4 py-3 text-center text-sm text-dark border-b border-light-2 w-10"> <input class="row-checkbox rounded text-primary focus:ring-primary/30" type="checkbox"> </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> <span class="truncate max-w-xs cursor-help" title="xxxx"> xxxx </span> </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[200px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[120px]"> xxxx </td> 
+          <td class="px-4 py-3 text-sm text-dark border-b border-light-2 min-w-[200px]"> <span class="truncate max-w-xs cursor-help" title="xxxx"> xxxx </span> </td> 
+         </tr> 
+        </tbody> 
+       </table> 
+      </div> 
+     </div> 
+    </div> 
+    <!-- [/MODULE] g6i_保全服务基本控制流程 -- 包含保全服务基本控制流程的风险点列表，过长内容缩略显示，鼠标悬停展示详情 --> 
+   </main> 
+   <!-- [/MODULE] c5d_主内容区 -- 包含内控矩阵页面的所有内容 --> 
+  </div> 
+  <!-- [/MODULE] a7f_主内容区域 -- 包含左侧导航栏和主内容区 --> 
+  <!-- [MODULE] k9l_风险点详情弹窗 --> 
+  <div class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center" id="risk-detail-modal"> 
+   <div class="bg-white rounded-lg shadow-xl w-full max-w-5xl max-h-[90vh] overflow-y-auto"> 
+    <div class="p-6 border-b border-light-2 flex justify-between items-center"> 
+     <h2 class="text-xl font-semibold text-dark" id="modal-title"> 流程详情 </h2> 
+     <button class="text-light-3 hover:text-dark transition-colors" id="close-modal"> <i class="fas fa-times text-xl"> </i> </button> 
+    </div> 
+    <div class="p-6" id="modal-content"> 
+     <!-- 弹窗内容将通过JS动态生成 --> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- [/MODULE] k9l_风险点详情弹窗 -- 展示风险点的详细信息表格 --> 
+  <!-- [MODULE] x7y_委托办理流程详情弹窗 --> 
+  <div class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center" id="delegate-process-modal"> 
+   <div class="bg-white rounded-lg shadow-xl w-full max-w-7xl max-h-[90vh] overflow-y-auto"> 
+    <div class="p-6 border-b border-light-2 flex justify-between items-center"> 
+     <h2 class="text-xl font-semibold text-dark" id="delegate-modal-title"> ×××××流程 </h2> 
+     <button class="text-light-3 hover:text-dark transition-colors" id="close-delegate-modal"> <i class="fas fa-times text-xl"> </i> </button> 
+    </div> 
+    <div class="p-6" id="delegate-modal-content"> 
+     <div class="overflow-x-auto"> 
+      <table class="w-full border-collapse"> 
+       <thead> 
+        <tr class="bg-light-1"> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 风险点名称 </th> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 控制措施描述 </th> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 执行控制的层级 </th> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 总部牵头部门 </th> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 省级牵头部门 </th> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 市级牵头部门 </th> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 县级牵头部门 </th> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 控制制度编号 </th> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 控制制度名称 </th> 
+         <th class="px-4 py-3 text-left text-dark-2 font-medium border-b border-light-2"> 控制制度描述 </th> 
+        </tr> 
+       </thead> 
+       <tbody> 
+        <tr class="hover:bg-light-1/50"> 
+         <td class="px-4 py-3 border-b border-light-2"> 委托办理流程不合规 </td> 
+         <td class="px-4 py-3 border-b border-light-2"> 严格审核委托办理申请材料，确保符合公司规定 </td> 
+         <td class="px-4 py-3 border-b border-light-2"> 总部 </td> 
+         <td class="px-4 py-3 border-b border-light-2"> 法务部 </td> 
+         <td class="px-4 py-3 border-b border-light-2"> 省公司法务部 </td> 
+         <td class="px-4 py-3 border-b border-light-2"> 市公司法务部 </td> 
+         <td class="px-4 py-3 border-b border-light-2"> 县公司法务部 </td> 
+         <td class="px-4 py-3 border-b border-light-2"> ZD-2023-001 </td> 
+         <td class="px-4 py-3 border-b border-light-2"> 委托办理管理办法 </td> 
+         <td class="px-4 py-3 border-b border-light-2"> 规范公司委托办理流程，明确各方职责权限 </td> 
+        </tr> 
+        <tr class="hover:bg-light-1/50"> 
+        </tr> 
+       </tbody> 
+      </table> 
+     </div> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- [/MODULE] x7y_委托办理流程详情弹窗 -- 展示委托办理流程的详细信息表格 --> 
+  <!-- [MODULE] a1b_通用弹窗 --> 
+  <div class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center" id="general-modal"> 
+   <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl"> 
+    <div class="p-6 border-b border-light-2 flex justify-between items-center"> 
+     <h2 class="text-xl font-semibold text-dark" id="general-modal-title"> 弹窗标题 </h2> 
+     <button class="text-light-3 hover:text-dark transition-colors" id="general-modal-close"> <i class="fas fa-times text-xl"> </i> </button> 
+    </div> 
+    <div class="p-6" id="general-modal-content"> 
+     <!-- 弹窗内容将通过JS动态生成 --> 
+    </div> 
+   </div> 
+  </div> 
+  <!-- [/MODULE] a1b_通用弹窗 -- 通用白色底块弹窗，背景四周变暗 --> 
+  <!-- [JSMOD] k9d_表格勾选与查询逻辑 --> 
+  <script id="表格勾选与查询逻辑">// 全选/取消全选
+document.getElementById('select-all').addEventListener('change', function () {
+  var _this = this;
+  var checkboxes = document.querySelectorAll('.row-checkbox');
+  checkboxes.forEach(function (checkbox) {
+    checkbox.checked = _this.checked;
+  });
+});
+// 单选功能，同步全选状态
+document.querySelectorAll('.row-checkbox').forEach(function (checkbox) {
+  checkbox.addEventListener('change', function () {
+    var allChecked = Array.from(document.querySelectorAll('.row-checkbox')).every(function (cb) {
+      return cb.checked;
+    });
+    document.getElementById('select-all').checked = allChecked;
+  });
+});
+// 查询按钮事件
+document.getElementById('search-btn').addEventListener('click', function () {
+  var riskName = document.getElementById('risk-name').value.trim();
+  var controlLevel = document.getElementById('control-level').value.trim();
+  var leadDept = document.getElementById('lead-dept').value.trim();
+  // 这里可以添加查询逻辑
+  console.log('查询条件:', {
+    riskName: riskName,
+    controlLevel: controlLevel,
+    leadDept: leadDept
+  });
+});
+// 导出按钮事件
+document.getElementById('export-btn').addEventListener('click', function () {
+  // 这里可以添加导出逻辑
+  console.log('导出数据');
+});</script> 
+  <!-- [/JSMOD] k9d_表格勾选与查询逻辑 -- 实现表格勾选、查询和导出功能 --> 
+  <!-- [JSMOD] x7z_委托办理流程弹窗逻辑 --> 
+  <script id="委托办理流程弹窗逻辑">// 打开委托办理流程详情弹窗
+document.querySelectorAll('.delegate-process-link').forEach(function (link) {
+  link.addEventListener('click', function () {
+    document.getElementById('delegate-process-modal').classList.remove('hidden');
+  });
+});
+
+// 关闭委托办理流程详情弹窗
+document.getElementById('close-delegate-modal').addEventListener('click', function () {
+  document.getElementById('delegate-process-modal').classList.add('hidden');
+});
+
+// 点击弹窗外部关闭弹窗
+document.getElementById('delegate-process-modal').addEventListener('click', function (e) {
+  if (e.target === this) {
+    this.classList.add('hidden');
+  }
+});</script> 
+  <!-- [/JSMOD] x7z_委托办理流程弹窗逻辑 -- 实现委托办理流程弹窗的打开和关闭功能 --> 
+  <!-- [JSMOD] c2d_通用弹窗逻辑 --> 
+  <script id="通用弹窗逻辑">// 打开通用弹窗
+function openGeneralModal(title, content) {
+  var modal = document.getElementById('general-modal');
+  var modalTitle = document.getElementById('general-modal-title');
+  var modalContent = document.getElementById('general-modal-content');
+  modalTitle.textContent = title;
+  modalContent.innerHTML = content;
+  modal.classList.remove('hidden');
+}
+// 关闭通用弹窗
+document.getElementById('general-modal-close').addEventListener('click', function () {
+  document.getElementById('general-modal').classList.add('hidden');
+});
+// 点击弹窗外部关闭弹窗
+document.getElementById('general-modal').addEventListener('click', function (e) {
+  if (e.target === this) {
+    this.classList.add('hidden');
+  }
+});</script> 
+  <!-- [/JSMOD] c2d_通用弹窗逻辑 -- 实现通用弹窗的显示和隐藏功能 --> 
+  <!-- [JSMOD] d3f_移动端菜单逻辑 --> 
+  <script id="移动端菜单逻辑">// 移动端菜单切换
+var mobileMenuBtn = document.getElementById('mobile-menu-btn');
+var sidebar = document.querySelector('aside');
+if (mobileMenuBtn && sidebar) {
+  mobileMenuBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('hidden');
+    sidebar.classList.toggle('fixed');
+    sidebar.classList.toggle('z-50');
+    sidebar.classList.toggle('h-full');
+  });
+}</script> 
+  <!-- [/JSMOD] d3f_移动端菜单逻辑 -- 实现移动端菜单的显示和隐藏 -->  
+ </body>
+</html>

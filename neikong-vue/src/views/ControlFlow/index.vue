@@ -1,16 +1,12 @@
 <script setup>
-import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import StatusBar from '@/components/StatusBar.vue'
 import RiskRow from './RiskRow.vue'
 import { useRiskList } from '@/composables/useRiskList'
 
 const route = useRoute()
 const router = useRouter()
 
-const { riskItems, columns, pageTitle, loading, error, load } = useRiskList(route.params.code)
-
-onMounted(load)
+const { riskItems, columns, pageTitle, loading, finished, error, loadMore } = useRiskList(route.params.code)
 
 function goBack() {
   router.back()
@@ -19,27 +15,33 @@ function goBack() {
 
 <template>
   <div class="view">
-    <status-bar />
     <van-nav-bar title="" :border="false" left-arrow @click-left="goBack" />
     <div class="scroll-area">
       <div class="page-title">{{ pageTitle }}</div>
 
-      <van-loading v-if="loading" type="spinner" class="loader" />
-      <van-empty v-else-if="error" :description="error" image="error" />
+      <van-empty v-if="error" :description="error" image="error" />
       <div v-else class="risk-card">
         <div
+          v-if="columns.length"
           class="table-header"
           :style="{ gridTemplateColumns: columns.slice(0, 3).map(c => `${c.flex}fr`).join(' ') }"
         >
           <span v-for="col in columns.slice(0, 3)" :key="col.key">{{ col.label }}</span>
         </div>
-        <risk-row
-          v-for="(item, i) in riskItems"
-          :key="i"
-          :item="item"
-          :summary-columns="columns.slice(0, 3)"
-          :detail-columns="columns.slice(3)"
-        />
+        <van-list
+          v-model:loading="loading"
+          :finished="finished"
+          finished-text="已全部加载"
+          @load="loadMore"
+        >
+          <risk-row
+            v-for="(item, i) in riskItems"
+            :key="i"
+            :item="item"
+            :summary-columns="columns.slice(0, 3)"
+            :detail-columns="columns.slice(3)"
+          />
+        </van-list>
       </div>
     </div>
   </div>
@@ -64,11 +66,6 @@ function goBack() {
   font-weight: 600;
   color: var(--text-primary);
   text-align: center;
-}
-.loader {
-  display: flex;
-  justify-content: center;
-  padding-top: 60px;
 }
 .risk-card {
   background: #fff;

@@ -1,5 +1,4 @@
 <script setup>
-import StatusBar from '@/components/StatusBar.vue'
 import OptionItem from './OptionItem.vue'
 import FeedbackPanel from './FeedbackPanel.vue'
 import { useQuiz } from '@/composables/useQuiz'
@@ -24,7 +23,6 @@ const { selected, isAnswered, feedbackText, feedbackType, selectOption, submit, 
 
 <template>
   <div class="view">
-    <status-bar />
 
     <div class="scroll-area">
       <div class="quiz-card">

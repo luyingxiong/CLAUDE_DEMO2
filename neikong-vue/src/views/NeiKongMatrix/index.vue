@@ -1,6 +1,5 @@
 <script setup>
 import { onMounted } from 'vue'
-import StatusBar from '@/components/StatusBar.vue'
 import SearchSection from './SearchSection.vue'
 import ProcessList from './ProcessList.vue'
 import { useProcessList } from '@/composables/useProcessList'
@@ -12,7 +11,6 @@ onMounted(load)
 
 <template>
   <div class="view">
-    <status-bar />
     <van-nav-bar title="内控矩阵" :border="true">
       <template #right>
         <van-icon name="ellipsis" size="18" color="#86909C" />

@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch } from 'vue'
-import StatusBar from '@/components/StatusBar.vue'
 import ChatList from './ChatList.vue'
 import SuggestedQuestions from './SuggestedQuestions.vue'
 import ChatInputBar from './ChatInputBar.vue'
@@ -30,7 +29,6 @@ function onSelect(q) {
 
 <template>
   <div class="view">
-    <status-bar />
     <van-nav-bar title="AI问答助手" :border="true" />
 
     <!-- 聊天消息列表 -->

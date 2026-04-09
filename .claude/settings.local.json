@@ -24,7 +24,8 @@
       "Read(//tmp/**)",
       "Bash(wait)",
       "Bash(echo \"PID: $!\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(curl:*)"
     ]
   }
 }

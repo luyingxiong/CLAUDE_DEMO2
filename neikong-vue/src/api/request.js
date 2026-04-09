@@ -11,4 +11,7 @@ async function request(path, options = {}) {
   return json.data
 }
 
-export const get = (path) => request(path)
+export const get = (path, params) => {
+  const query = params ? '?' + new URLSearchParams(params).toString() : ''
+  return request(`${path}${query}`)
+}

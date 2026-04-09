@@ -3,6 +3,7 @@ import { fetchRiskList } from '@/api/matrix'
 
 export function useRiskList(code) {
   const riskItems = ref([])
+  const columns = ref([])
   const processName = ref('')
   const loading = ref(false)
   const error = ref(null)
@@ -17,6 +18,7 @@ export function useRiskList(code) {
     try {
       const data = await fetchRiskList(code)
       processName.value = data.processName
+      columns.value = data.columns ?? []
       riskItems.value = data.riskItems
     } catch (e) {
       error.value = e.message
@@ -25,5 +27,5 @@ export function useRiskList(code) {
     }
   }
 
-  return { riskItems, pageTitle, loading, error, load }
+  return { riskItems, columns, pageTitle, loading, error, load }
 }

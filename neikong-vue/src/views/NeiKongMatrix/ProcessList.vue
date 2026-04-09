@@ -23,7 +23,6 @@ function onItemClick(item) {
           v-for="item in group.items"
           :key="item.code"
           :title="item.name"
-          :label="item.code"
           is-link
           @click="onItemClick(item)"
         />

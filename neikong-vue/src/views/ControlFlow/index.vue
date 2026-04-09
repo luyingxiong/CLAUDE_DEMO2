@@ -8,7 +8,7 @@ import { useRiskList } from '@/composables/useRiskList'
 const route = useRoute()
 const router = useRouter()
 
-const { riskItems, pageTitle, loading, error, load } = useRiskList(route.params.code)
+const { riskItems, columns, pageTitle, loading, error, load } = useRiskList(route.params.code)
 
 onMounted(load)
 
@@ -27,12 +27,19 @@ function goBack() {
       <van-loading v-if="loading" type="spinner" class="loader" />
       <van-empty v-else-if="error" :description="error" image="error" />
       <div v-else class="risk-card">
-        <div class="table-header">
-          <span>风险点名称</span>
-          <span>控制措施描述</span>
-          <span>执行控制层级</span>
+        <div
+          class="table-header"
+          :style="{ gridTemplateColumns: columns.slice(0, 3).map(c => `${c.flex}fr`).join(' ') }"
+        >
+          <span v-for="col in columns.slice(0, 3)" :key="col.key">{{ col.label }}</span>
         </div>
-        <risk-row v-for="item in riskItems" :key="item.id" :item="item" />
+        <risk-row
+          v-for="(item, i) in riskItems"
+          :key="i"
+          :item="item"
+          :summary-columns="columns.slice(0, 3)"
+          :detail-columns="columns.slice(3)"
+        />
       </div>
     </div>
   </div>
@@ -72,7 +79,6 @@ function goBack() {
 }
 .table-header {
   display: grid;
-  grid-template-columns: 2fr 3fr 2fr;
   background: #f2f3f5;
   border-bottom: 1px solid var(--border);
 }

@@ -1,5 +1,5 @@
 import { Controller, Get, Param, NotFoundException } from '@nestjs/common'
-import { PROCESS_GROUPS, RISK_ITEMS } from './matrix.data'
+import { PROCESS_GROUPS, RISK_COLUMNS, RISK_ITEMS } from './matrix.data'
 
 @Controller('api/matrix')
 export class MatrixController {
@@ -16,7 +16,7 @@ export class MatrixController {
     return {
       code: 0,
       msg: 'success',
-      data: { processName: process.name, riskItems: RISK_ITEMS },
+      data: { processName: process.name, columns: RISK_COLUMNS, riskItems: RISK_ITEMS },
     }
   }
 }

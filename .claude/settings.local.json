@@ -23,7 +23,8 @@
       "Bash(echo \"Frontend PID: $!\")",
       "Read(//tmp/**)",
       "Bash(wait)",
-      "Bash(echo \"PID: $!\")"
+      "Bash(echo \"PID: $!\")",
+      "Bash(git commit:*)"
     ]
   }
 }

@@ -8,7 +8,22 @@
       "Bash(gh repo:*)",
       "Bash(claude mcp:*)",
       "Bash(npm install:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(curl -s http://localhost:5173/api/matrix/process/list)",
+      "Bash(curl -s http://localhost:5173/api/matrix/process/B001/risks)",
+      "Bash(git push:*)",
+      "Bash(npm -v)",
+      "Bash(npm i:*)",
+      "Bash(nest --version)",
+      "Bash(npx @nestjs/cli --version)",
+      "Bash(nest new:*)",
+      "Bash(npx tsc:*)",
+      "Bash(node:*)",
+      "Bash(echo \"Backend PID: $!\")",
+      "Bash(echo \"Frontend PID: $!\")",
+      "Read(//tmp/**)",
+      "Bash(wait)",
+      "Bash(echo \"PID: $!\")"
     ]
   }
 }
